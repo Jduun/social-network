@@ -1,9 +1,0 @@
-http_server:
-  port: 8080
-  
-database:
-  host: localhost
-  port: 5432
-  user: postgres
-  password: 123456
-  name: socialnetworkdb

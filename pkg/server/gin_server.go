@@ -31,7 +31,7 @@ func (server *ginServer) Start() {
 			"message": "pong",
 		})
 	})
-	err := server.engine.Run(fmt.Sprintf(":%s", server.config.HTTPServer.Port))
+	err := server.engine.Run(fmt.Sprintf(":%s", server.config.AppPort))
 	if err != nil {
 		panic(fmt.Sprintf("Cannot run Gin Server: %s", err))
 	}

@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"context"
-	"social-network/internal/dto"
 	"github.com/google/uuid"
+	"social-network/internal/dto"
 )
 
 type UserRepository interface {

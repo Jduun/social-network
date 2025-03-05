@@ -1,0 +1,31 @@
+services:
+  social_network:
+    build:
+      context: .
+    container_name: social-network
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT}:8080"
+    env_file:
+      - .env
+    depends_on:
+      - social_network_db
+  
+  social_network_db:
+    image: postgres:17
+    container_name: social-network-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - ${DB_PATH}:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

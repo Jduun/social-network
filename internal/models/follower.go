@@ -6,5 +6,5 @@ import (
 
 type Follower struct {
 	FollowerId uuid.UUID `db:"follower_id"`
-	Following uuid.UUID `db:"following_id"`
+	Following  uuid.UUID `db:"following_id"`
 }

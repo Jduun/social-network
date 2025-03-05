@@ -8,6 +8,6 @@ type UserCreateDTO struct {
 }
 
 type UserResponseDTO struct {
-	Id uuid.UUID
+	Id       uuid.UUID
 	Username string
 }

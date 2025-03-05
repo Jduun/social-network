@@ -2,40 +2,26 @@ package config
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type Config struct {
-	HTTPServer *HTTPServer `yaml:"http_server"`
-	Database   *Database   `yaml:"database"`
-}
-
-type HTTPServer struct {
-	Port string `yaml:"port"`
-}
-
-type Database struct {
-	Host     string `yaml:"host"`
-	Port     string    `yaml:"port"`
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	Name     string `yaml:"name"`
+	AppPort    string `env:"APP_PORT"`
+	JwtSecret  string `env:"JWT_SECRET"`
+	DbHost     string `env:"DB_HOST"`
+	DbPort     string `env:"DB_PORT"`
+	DbUsername string `env:"DB_USERNAME"`
+	DbPassword string `env:"DB_PASSWORD"`
+	DbName     string `env:"DB_NAME"`
+	DbPath     string `env:"DB_PATH"`
 }
 
 func MustLoad() *Config {
-	configPath := "./config/config.yaml"
-
-	// check if file exists
-	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		panic(fmt.Sprintf("Config file does not exist: %s", configPath))
-	}
-
 	var config Config
-	if err := cleanenv.ReadConfig(configPath, &config); err != nil {
-		panic(fmt.Sprintf("Cannot read config: %s", configPath))
+	if err := cleanenv.ReadEnv(&config); err != nil {
+		panic("Cannot read .env file")
 	}
-
+	fmt.Println(fmt.Sprintf("APP_PORT: %s", config.AppPort))
 	return &config
 }
