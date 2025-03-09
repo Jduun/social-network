@@ -10,7 +10,9 @@ services:
       - .env
     depends_on:
       - social_network_db
-  
+    networks:
+      - app-network
+
   social_network_db:
     image: postgres:17
     container_name: social-network-db

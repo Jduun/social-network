@@ -8,4 +8,5 @@ RUN go build /app/cmd/app/main.go
 FROM alpine
 WORKDIR /app
 COPY --from=builder /app/main ./main
+COPY --from=builder /app/migrations ./migrations
 CMD [ "./main" ]

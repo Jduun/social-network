@@ -2,8 +2,13 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+
 	"social-network/config"
+	"social-network/internal/handlers"
+	"social-network/internal/repositories"
+	"social-network/internal/services"
 	"social-network/pkg/database"
 
 	"github.com/gin-gonic/gin"
@@ -12,27 +17,36 @@ import (
 type ginServer struct {
 	engine *gin.Engine
 	db     *database.PostgresDatabase
-	config *config.Config
+	cfg    *config.Config
 }
 
-func NewGinServer(config *config.Config, db *database.PostgresDatabase) Server {
+func NewGinServer(cfg *config.Config, db *database.PostgresDatabase) Server {
 	engine := gin.Default()
 
 	return &ginServer{
 		engine: engine,
 		db:     db,
-		config: config,
+		cfg:    cfg,
 	}
 }
 
-func (server *ginServer) Start() {
-	server.engine.GET("/ping", func(c *gin.Context) {
+func (s *ginServer) Start() {
+	userRepo := repositories.NewUserPostgresRepository(s.db)
+	authService := services.NewAuthServiceImpl(userRepo)
+	authHandlers := handlers.NewAuthHTTPHandlers(authService)
+
+	s.engine.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
-	err := server.engine.Run(fmt.Sprintf(":%s", server.config.AppPort))
+
+	s.engine.POST("/auth/register", authHandlers.Register)
+	s.engine.POST("/auth/login", authHandlers.Login)
+	s.engine.GET("/auth/me", authHandlers.GetMe)
+
+	err := s.engine.Run(fmt.Sprintf(":%s", s.cfg.AppPort))
 	if err != nil {
-		panic(fmt.Sprintf("Cannot run Gin Server: %s", err))
+		log.Fatalf("Cannot run Gin Server: %s", err)
 	}
 }
