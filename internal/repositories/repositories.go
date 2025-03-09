@@ -8,5 +8,6 @@ import (
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user dto.UserCreateDTO) (dto.UserResponseDTO, error)
-	GetUserById(ctx context.Context, id uuid.UUID) (dto.UserResponseDTO, error)
+	GetUserById(ctx context.Context, id uuid.UUID) (dto.UserEntityDTO, error)
+	GetUserByName(ctx context.Context, username string) (dto.UserEntityDTO, error)
 }
